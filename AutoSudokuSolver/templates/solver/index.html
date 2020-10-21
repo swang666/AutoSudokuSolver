@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href='{% static "css/index.css"%}' />
+    <title>Auto Sudoku Solver</title>
+  </head>
+  <body>
+    <div class="container">
+      <form method="post" enctype="multipart/form-data">
+        {{form.as_p}} {% csrf_token %} {% if sol %}
+        <table>
+          {% for row in sol %}
+          <tr>
+            {% for cell in row %}
+            <td>{{cell}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+
+        {% endif %}
+        <input type="submit" class="btn btn-primary" value="submit" />
+      </form>
+    </div>
+  </body>
+</html>
