@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% if sol %}
+        <table>
+          {% for row in sol %}
+          <tr>
+            {% for cell in row %}
+            <td>{{cell}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p>Calculating...</p>
+        {% endif %}
+    </body>
+</html>

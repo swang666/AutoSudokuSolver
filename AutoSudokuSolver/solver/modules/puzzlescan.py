@@ -7,10 +7,12 @@ import sys
 from PIL import Image
 import base64
 
-def puzzle_process(encoded_data):
+def find_corners(encoded_data):
         nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        
+        height,width, _ = img.shape
+        x_factor = 360/width
+        y_factor = 360/height
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.fastNlMeansDenoising(gray, h = 10)
 
@@ -51,11 +53,12 @@ def puzzle_process(encoded_data):
         cornerLB = tuple(max(third_quadrant, key = distance))
         cornerRB = tuple(max(fourth_quadrant, key = distance))
 
+        return cornerLT, cornerLB, cornerRB, cornerRT, x_factor, y_factor, outerBox
 
+def puzzle_process(cornerLT, cornerLB, cornerRB, cornerRT, outerBox):
         # crop out puzzle and transform
         pts1 = np.float32([cornerLT,cornerRT,cornerLB,cornerRB])
         pts2 = np.float32([[0,0],[360,0],[0,360],[360,360]])
-
         M = cv2.getPerspectiveTransform(pts1,pts2)
         gray_dst = cv2.warpPerspective(outerBox,M,(360,360))
 

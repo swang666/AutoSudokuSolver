@@ -3,5 +3,6 @@ from solver import views
 
 urlpatterns = [
     path('', views.index, name = 'index'),
-    path('read-image/', views.read_image, name = 'read_image')
+    path('read-image/', views.read_image, name = 'read_image'),
+    path('output/', views.render_output, name = 'output')
 ]

@@ -19,6 +19,7 @@ def read_and_solve(puzzle):
     base = os.path.dirname(os.path.realpath(__file__))
     model_dir = os.path.join(base, 'models/digit_rec_model2.h5')
     model = load_model(model_dir)
+    
     X = []
     for i in range(0,9):
         for j in range(0,9):       

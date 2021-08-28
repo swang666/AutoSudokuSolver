@@ -10,8 +10,9 @@
   </head>
   <body>
     <div class="container">
-      <form method="post" enctype="multipart/form-data">
-        {{form.as_p}} {% csrf_token %} {% if sol %}
+      <form method="post" action = "{% url 'read_image' %}" enctype="multipart/form-data">
+        {{form.as_p}}{% csrf_token %}
+        <!-- {{form.as_p}} {% csrf_token %} {% if sol %}
         <table>
           {% for row in sol %}
           <tr>
@@ -22,7 +23,7 @@
           {% endfor %}
         </table>
 
-        {% endif %}
+        {% endif %} -->
         <input type="submit" class="btn btn-primary" value="submit" />
       </form>
     </div>
