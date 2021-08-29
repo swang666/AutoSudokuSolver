@@ -8,10 +8,10 @@ pandas = "*"
 django = "*"
 matplotlib = "*"
 opencv-python = "*"
-keras = "*"
+keras = "==2.4.3"
 pillow = "*"
 sklearn = "*"
-tensorflow = "*"
+tensorflow = "==2.5.0"
 
 [dev-packages]
 
