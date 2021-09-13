@@ -7,7 +7,7 @@ from PIL import Image
 import base64
 import numpy as np
 import solver.modules.puzzlescan as ps
-from solver.modules.puzzle_solving import read_and_solve
+import solver.modules.puzzle_solving as pzs
 from django.http import HttpResponse
 
 
@@ -18,14 +18,6 @@ def index(request):
     if request.method == 'POST':
 
         form = forms.ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            upFile = request.FILES['img']
-            data = upFile.read()
-            
-            encoded = base64.b64encode(data)
-            processed_img = puzzle_process(encoded)
-            sol = read_and_solve(processed_img)
-            payload['sol'] = sol
 
             
     payload['form'] = form     
@@ -41,11 +33,11 @@ def read_image(request):
         if form.is_valid():
             upFile = request.FILES['img']
             data = upFile.read()
-            
+
             encoded = base64.b64encode(data)
             decoded = encoded.decode('utf8')
             decoded = 'data:image/jpg;base64,' + decoded
-            lt, lb, rb, rt, x_factor, y_factor, processed_img = ps.find_corners(encoded)
+            lt, lb, rb, rt, factor, canvas_height, processed_img = ps.find_corners(encoded)
             #sol = read_and_solve(processed_img)
             points = [lt,lb,rb,rt]
             #payload['sol'] = sol
@@ -53,31 +45,63 @@ def read_image(request):
             for i in range(4):
                 payload[keys[i] + 'x'] = points[i][0]
                 payload[keys[i] + 'y'] = points[i][1]
-            payload['x_factor'] = x_factor
-            payload['y_factor'] = y_factor
+            payload['factor'] = factor
+            payload['canvas_height'] = canvas_height
             payload['imgb64'] = decoded
             request.session['processed_img'] = processed_img.tolist()
     payload['form'] = form     
 
     return render(request, 'solver/read_image.html', context = payload)
 
-def render_output(request):
+def process_image(request):
     payload = {}
     if request.method == 'POST':
         points = []
         data = request.POST
         
-        x_factor = float(data['x_factor'])
-        y_factor = float(data['y_factor'])
+        factor = float(data['factor'])
         for i in range(4):
             x = float(data[f'points[{i}][x]'])
             y = float(data[f'points[{i}][y]'])
-            points.append((x/x_factor,y/y_factor))
+            points.append((x/factor,y/factor))
         
         processed_img = np.array(request.session.get('processed_img'),np.uint8)
         #print(processed_img)
         smooth = ps.puzzle_process(points[0],points[1],points[2],points[3], processed_img)
-        sol = read_and_solve(smooth)
-        payload['sol'] = sol
-        print(sol)
-    return HttpResponse(sol)
+        puzzle = pzs.read_puzzle(smooth)
+        
+        html = "<table id = 'process_puzzle'>"
+        for row in puzzle:
+            html += "<tr>"
+            for cell in row:
+                if cell != 0:
+                    html += "<td><input value = '" + str(cell) + "' type = 'number'></td>"
+                else:
+                    html += "<td><input type = 'number'></td>"
+            html += "</tr>"
+        html += "</table>"
+
+    return HttpResponse(html)
+
+def render_output(request):
+    if request.method == 'POST':
+        data = request.POST
+        puzzle = []
+        for i in range(9):
+            row = data.getlist(f'puzzle[{i}][]')
+            row = [int(x) for x in row]
+            puzzle.append(row)
+
+        sol = pzs.solve_puzzle(puzzle)
+        if sol:
+            html = "<table id = 'output'>"
+            for row in sol:
+                html += "<tr>"
+                for cell in row:
+                    html += "<td><input value = '" + str(cell) + "' type = 'number' disabled></td>"
+                html += "</tr>"
+            html += "</table>"
+        else:
+            html = "Oops, I can't solve the puzzle with what you provided"
+
+    return HttpResponse(html)

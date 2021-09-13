@@ -1,31 +1,50 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href='{% static "css/index.css"%}' />
-    <title>Auto Sudoku Solver</title>
-  </head>
-  <body>
-    <div class="container">
-      <form method="post" action = "{% url 'read_image' %}" enctype="multipart/form-data">
-        {{form.as_p}}{% csrf_token %}
-        <!-- {{form.as_p}} {% csrf_token %} {% if sol %}
-        <table>
-          {% for row in sol %}
-          <tr>
-            {% for cell in row %}
-            <td>{{cell}}</td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
 
-        {% endif %} -->
-        <input type="submit" class="btn btn-primary" value="submit" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <title>Auto Sudoku Solver</title>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <h2>Automatic Sudoku Solver</h2>
+    </div>
+    <div class="row justify-content-center">
+      <img src="{% static 'images/title.jpg' %}" style='height: 100%; width: 100%; object-fit: contain'>
+    </div>
+    <div class="row justify-content-center">
+      <p>Take or upload a picture of your puzzle to get started</p>
+    </div>
+    <div class="row justify-content-center">
+      <form method="post" action="{% url 'read_image' %}" enctype="multipart/form-data">
+        {{form.as_p}}{% csrf_token %}
+
+        <input type="submit" class="btn btn-primary " value="submit" onclick="showLoading()"/>
       </form>
     </div>
-  </body>
+    <div class="row justify-content-center">
+      <div id = 'loading' class = "d-none">
+        <img src="{% static 'images/spinner.gif' %}">
+      </div>
+    </div>
+  </div>
+  <script>
+    function showLoading(){
+      $("#loading").attr("class", "d-block")
+    }
+  </script>
+</body>
+
 </html>

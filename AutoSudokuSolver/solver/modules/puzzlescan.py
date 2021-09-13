@@ -11,8 +11,11 @@ def find_corners(encoded_data):
         nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         height,width, _ = img.shape
-        x_factor = 360/width
-        y_factor = 360/height
+        canvas_width = 360
+        factor = canvas_width / width
+        canvas_height = factor * height
+        #x_factor = 360/width
+        #y_factor = 360/height
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.fastNlMeansDenoising(gray, h = 10)
 
@@ -53,7 +56,7 @@ def find_corners(encoded_data):
         cornerLB = tuple(max(third_quadrant, key = distance))
         cornerRB = tuple(max(fourth_quadrant, key = distance))
 
-        return cornerLT, cornerLB, cornerRB, cornerRT, x_factor, y_factor, outerBox
+        return cornerLT, cornerLB, cornerRB, cornerRT, factor, canvas_height, outerBox
 
 def puzzle_process(cornerLT, cornerLB, cornerRB, cornerRT, outerBox):
         # crop out puzzle and transform

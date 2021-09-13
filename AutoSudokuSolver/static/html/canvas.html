@@ -40,6 +40,9 @@
         canvas.onmousedown = myDown;
         canvas.onmouseup = myUp;
         canvas.onmousemove = myMove;
+        canvas.ontouchstart = myDown;
+        canvas.ontouchmove = myMove;
+        canvas.ontouchend = myUp;
 
         // call to draw the scene
         draw();

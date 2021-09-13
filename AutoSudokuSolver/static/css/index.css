@@ -2,10 +2,48 @@ table {
     border-collapse: collapse;
 }
 
-table,th, td{
+table,
+th,
+td {
     border: 2px solid black;
 }
 
-td {
-    padding: 5px;
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: none
+}
+
+input[type="text"][disabled] {
+    color: black;
+ }
+
+p{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center; 
+}
+
+.img-flipped {
+    transform: scaleX(-1);
+}
+
+.buttonload {
+    background-color: #04AA6D; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 12px 24px; /* Some padding */
+    font-size: 16px; /* Set a font-size */
+  }
+
+#output {
+    margin-top: 20px;
 }
